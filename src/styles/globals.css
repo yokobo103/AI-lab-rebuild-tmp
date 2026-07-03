@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-ivory);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  color: var(--color-navy);
+  background:
+    radial-gradient(circle at 8% 10%, rgba(79, 209, 232, 0.16), transparent 28%),
+    linear-gradient(180deg, var(--color-ivory), #fbf0dc 100%);
+  font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+  line-height: 1.7;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
