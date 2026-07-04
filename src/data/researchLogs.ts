@@ -1,3 +1,5 @@
+import { routes } from "./routes";
+
 export type LogStatus = "success" | "tuning" | "fail" | null;
 export type LogCategory = "開発ログ" | "考えたこと" | "失敗の記録" | "お知らせ";
 
@@ -81,7 +83,7 @@ export const researchLogs: ResearchLog[] = [
 ];
 
 export function destUrl(dest: string) {
-  return `/play#${dest}`;
+  return routes.experimentAnchor(dest);
 }
 
 export function statusLabel(status: LogStatus) {

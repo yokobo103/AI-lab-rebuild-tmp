@@ -1,4 +1,5 @@
 import { assets } from "../data/assets";
+import { routes } from "../data/routes";
 import { Footer } from "./Footer";
 import { LabButton } from "./LabButton";
 
@@ -37,14 +38,14 @@ export function AboutLabPage() {
             </p>
             <div className="about-hero__actions">
               <LabButton
-                href="/experiments"
+                href={routes.experiments}
                 label="遊ぶ（実験室へ）"
                 icon={assets.icons.flask}
                 sprite={assets.ctaSprites.playFlaskHover}
                 variant="primary"
               />
               <LabButton
-                href="/read"
+                href={routes.read}
                 label="読む（資料室へ）"
                 icon={assets.icons.book}
                 sprite={assets.ctaSprites.readBookHover}

@@ -1,5 +1,5 @@
 import type { LabExperiment } from "../data/labExperiments";
-import { researchLogs } from "../data/researchLogs";
+import { getExperimentLogHref, getRelatedLogSlugs } from "../data/experimentRelations";
 
 type LabExperimentCardProps = {
   experiment: LabExperiment;
@@ -31,12 +31,13 @@ function statusBadgeLabel(status: LabExperiment["status"]) {
 
 export function LabExperimentCard({ experiment, featured = false }: LabExperimentCardProps) {
   const tone = categoryTone(experiment.category);
-  const relatedLogCount = researchLogs.filter((log) => log.dest === experiment.id).length;
-  const logHref = `/read?experiment=${encodeURIComponent(experiment.id)}`;
+  const relatedLogCount = getRelatedLogSlugs(experiment.id).length;
+  const logHref = getExperimentLogHref(experiment.id);
   const logLabel = relatedLogCount > 1 ? `記録 ${relatedLogCount}件` : "記録を読む";
 
   return (
     <article
+      id={experiment.id}
       className={[
         "lab-experiment-card",
         featured ? "lab-experiment-card--featured" : "",

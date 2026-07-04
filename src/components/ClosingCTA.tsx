@@ -1,4 +1,5 @@
 import { assets } from "../data/assets";
+import { plannedRoutes, routes } from "../data/routes";
 import { LabButton } from "./LabButton";
 
 export function ClosingCTA() {
@@ -14,9 +15,12 @@ export function ClosingCTA() {
           </p>
         </div>
         <div className="closing-cta__actions">
-          <LabButton href="/experiments" label="実験室へ転送する" icon={assets.icons.flask} />
-          <LabButton href="/logs" label="研究ログを読む" icon={assets.icons.book} variant="log" />
-          <LabButton href="/random" label="ランダム転送" icon={assets.icons.transfer} variant="random" />
+          <LabButton href={routes.experiments} label="実験室へ転送する" icon={assets.icons.flask} />
+          <LabButton href={routes.read} label="研究ログを読む" icon={assets.icons.book} variant="log" />
+          <span className="lab-button lab-button--random is-disabled" aria-disabled="true" data-planned-route={plannedRoutes.randomTransfer}>
+            <img className="lab-button__icon" src={assets.icons.transfer} alt="" aria-hidden="true" />
+            <span>ランダム転送 準備中</span>
+          </span>
         </div>
       </div>
     </section>

@@ -1,18 +1,16 @@
 import { assets } from "../data/assets";
+import { externalRoutes, routes } from "../data/routes";
 
 type HeaderProps = {
   variant?: "light" | "dark";
   showNav?: boolean;
 };
 
-const contactFormUrl =
-  "https://docs.google.com/forms/d/e/1FAIpQLScgKOrGgMR1S_TlSgRCCjsGQVZpK1PjqJvrX3E2ZdnpjqGC2w/viewform?usp=dialog";
-
 const headerNavLinks = [
-  { label: "実験室", href: "/experiments", match: "/experiments" },
-  { label: "資料室", href: "/read", match: "/read" },
-  { label: "ラボ案内", href: "/about", match: "/about" },
-  { label: "感想・お問い合わせ", href: contactFormUrl, external: true },
+  { label: "実験室", href: routes.experiments, match: routes.experiments },
+  { label: "資料室", href: routes.read, match: routes.read },
+  { label: "ラボ案内", href: routes.about, match: routes.about },
+  { label: "感想・お問い合わせ", href: externalRoutes.contact, external: true },
 ] as const;
 
 export function Header({ variant = "light", showNav = false }: HeaderProps) {
@@ -21,7 +19,7 @@ export function Header({ variant = "light", showNav = false }: HeaderProps) {
 
   return (
     <header className={`site-header site-header--${variant}${showNav ? " site-header--with-nav" : ""}`} aria-label="サイトヘッダー">
-      <a className="site-header__brand" href="/" aria-label="よこぼのAIラボ ホーム">
+      <a className="site-header__brand" href={routes.home} aria-label="よこぼのAIラボ ホーム">
         <img src={logo} alt="よこぼのAIラボ" />
       </a>
       {showNav ? (

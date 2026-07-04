@@ -27,7 +27,14 @@ export function EntranceCard({ entrance }: { entrance: Entrance }) {
           <h3>{entrance.title}</h3>
           <p>{entrance.body}</p>
         </div>
-        <LabButton href={entrance.href} label={entrance.buttonLabel} icon={entrance.icon} variant={variantMap[entrance.id]} />
+        {entrance.href ? (
+          <LabButton href={entrance.href} label={entrance.buttonLabel} icon={entrance.icon} variant={variantMap[entrance.id]} />
+        ) : (
+          <span className={`lab-button lab-button--${variantMap[entrance.id]} is-disabled`} aria-disabled="true">
+            <img className="lab-button__icon" src={entrance.icon} alt="" aria-hidden="true" />
+            <span>{entrance.buttonLabel}</span>
+          </span>
+        )}
       </div>
     </article>
   );

@@ -1,27 +1,26 @@
-const contactFormUrl =
-  "https://docs.google.com/forms/d/e/1FAIpQLScgKOrGgMR1S_TlSgRCCjsGQVZpK1PjqJvrX3E2ZdnpjqGC2w/viewform?usp=dialog";
+import { externalRoutes, routes } from "../data/routes";
 
 const footerGroups = [
   {
     title: "メインエリア",
     links: [
-      { label: "実験室", href: "/experiments" },
-      { label: "資料室", href: "/read" },
+      { label: "実験室", href: routes.experiments },
+      { label: "資料室", href: routes.read },
     ],
   },
   {
     title: "ラボのこと",
     links: [
-      { label: "ラボ案内", href: "/about" },
-      { label: "感想・お問い合わせ", href: contactFormUrl, external: true },
+      { label: "ラボ案内", href: routes.about },
+      { label: "感想・お問い合わせ", href: externalRoutes.contact, external: true },
     ],
   },
   {
     title: "外部活動",
     links: [
-      { label: "ポッドキャスト ↗", href: "https://open.spotify.com/show/033vTuXONCeGCsiffRWoNM", external: true },
+      { label: "ポッドキャスト ↗", href: externalRoutes.podcast, external: true },
       { label: "note ↗", disabled: true },
-      { label: "X ↗", href: "https://x.com/yokobo_ai", external: true },
+      { label: "X ↗", href: externalRoutes.x, external: true },
     ],
   },
 ] as const;

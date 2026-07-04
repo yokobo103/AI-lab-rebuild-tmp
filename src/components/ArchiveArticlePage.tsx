@@ -1,5 +1,6 @@
 import { archiveArticles, getArchiveArticle } from "../data/archiveArticles";
 import type { ArchiveArticle } from "../data/archiveArticles";
+import { routes } from "../data/routes";
 import { markdownToHtml } from "../utils/markdown";
 
 type ArchiveArticlePageProps = {
@@ -46,7 +47,7 @@ function ArticleNotFound() {
     <div className="read-page">
       <div className="paper-grain" aria-hidden="true" />
       <main className="archive-article archive-article--missing">
-        <a className="archive-back-link" href="/read">
+        <a className="archive-back-link" href={routes.read}>
           資料室へ戻る
         </a>
         <h1>記事が見つかりませんでした</h1>
@@ -103,14 +104,14 @@ export function ArchiveArticlePage({ slug }: ArchiveArticlePageProps) {
       <div className="paper-grain" aria-hidden="true" />
       <main className="archive-article">
         <nav className="archive-article__breadcrumb" aria-label="パンくず">
-          <a href="/">ラボ</a>
+          <a href={routes.home}>ラボ</a>
           <span aria-hidden="true">/</span>
-          <a href="/read">資料室</a>
+          <a href={routes.read}>資料室</a>
           <span aria-hidden="true">/</span>
           <span>{article.title}</span>
         </nav>
 
-        <a className="archive-back-link" href="/read">
+        <a className="archive-back-link" href={routes.read}>
           資料室へ戻る
         </a>
 

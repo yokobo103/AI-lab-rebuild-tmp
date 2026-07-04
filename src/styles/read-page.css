@@ -259,6 +259,54 @@ body:has(.read-page)::after {
   text-underline-offset: 0.18em;
 }
 
+.read-hero__meter {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: min(520px, 100%);
+  margin: 22px 0 0;
+}
+
+.read-hero__meter div {
+  border: 1px solid rgba(133, 122, 100, 0.28);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0)),
+    rgba(255, 248, 232, 0.56);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.read-hero__meter dt {
+  margin: 0 0 5px;
+  color: var(--ink-soft);
+  font-family: var(--read-mono);
+  font-size: 0.64rem;
+  font-weight: 800;
+}
+
+.read-hero__meter dd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+}
+
+.read-hero__meter strong {
+  color: var(--ink);
+  font-family: var(--read-mono);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.read-hero__meter span {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
 .librarian-card,
 .research-section__paper,
 .read-strip__item {
@@ -842,7 +890,7 @@ body:has(.read-page)::after {
   font-size: 0.8rem;
 }
 
-.read-strip__item[href="/tags"] > span:last-child {
+.read-strip__item--pending > span:last-child {
   padding-right: 72px;
 }
 
@@ -1345,6 +1393,10 @@ body:has(.read-page)::after {
     font-size: clamp(4rem, 24vw, 6.4rem);
   }
 
+  .read-hero__meter {
+    grid-template-columns: 1fr;
+  }
+
   .librarian-card {
     padding: 16px;
   }
@@ -1435,7 +1487,7 @@ body:has(.read-page)::after {
     padding: 16px;
   }
 
-  .read-strip__item[href="/tags"] > span:last-child {
+  .read-strip__item--pending > span:last-child {
     padding-right: 52px;
   }
 

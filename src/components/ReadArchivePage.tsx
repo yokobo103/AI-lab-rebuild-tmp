@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { archiveArticles } from "../data/archiveArticles";
 import type { ArchiveArticle } from "../data/archiveArticles";
-import { destUrl, logCategories, researchLogs, statusLabel } from "../data/researchLogs";
+import { getExperimentLaunchHref, getRelatedExperiment, getRelatedExperimentId } from "../data/experimentRelations";
+import { logCategories, researchLogs, statusLabel } from "../data/researchLogs";
 import type { LogFilter, ResearchLog } from "../data/researchLogs";
+import { plannedRoutes, routes } from "../data/routes";
 
 function formatLogDate(value?: string) {
   if (!value) return "";
@@ -12,15 +14,17 @@ function formatLogDate(value?: string) {
 }
 
 function articleToResearchLog(article: ArchiveArticle, index: number): ResearchLog {
+  const status = article.resultStatus === "success" ? "success" : article.resultStatus === "failed" ? "fail" : "tuning";
+
   return {
     id: `LOG-${String(researchLogs.length + index + 1).padStart(3, "0")}`,
     date: formatLogDate(article.publishedAt || article.createdAt || article.updatedAt),
-    status: article.resultStatus === "success" ? "success" : "tuning",
+    status,
     category: "開発ログ",
     title: article.title,
     excerpt: article.summary,
     tags: article.tags.slice(0, 4),
-    href: `/read/${article.id}`,
+    href: routes.readArticle(article.id),
     thumbnail: article.thumbnail,
     slug: article.id,
   };
@@ -30,14 +34,35 @@ const articleLogEntries = archiveArticles.map(articleToResearchLog);
 const allResearchLogs = [...researchLogs, ...articleLogEntries].sort((a, b) => b.date.localeCompare(a.date));
 const totalLogCount = allResearchLogs.length;
 const latestLog = allResearchLogs[0];
+const readStatusCounts = allResearchLogs.reduce(
+  (counts, log) => {
+    if (log.status === "success") {
+      counts.success += 1;
+    } else if (log.status === "fail") {
+      counts.fail += 1;
+    } else {
+      counts.tuning += 1;
+    }
+
+    return counts;
+  },
+  { success: 0, fail: 0, tuning: 0 },
+);
+
+function logReadHref(log: ResearchLog) {
+  if (log.href) return log.href;
+  const experimentId = getRelatedExperimentId(log);
+  if (experimentId) return routes.readExperimentFilter(experimentId);
+  return routes.read;
+}
 
 function BreadcrumbBar() {
   return (
     <div className="read-meta-bar">
       <nav className="read-breadcrumb" aria-label="パンくず">
-        <a href="/">ラボ</a>
+        <a href={routes.home}>ラボ</a>
         <span aria-hidden="true">/</span>
-        <a href="/read">読む</a>
+        <a href={routes.read}>読む</a>
         <span aria-hidden="true">/</span>
         <span>資料室</span>
       </nav>
@@ -46,7 +71,7 @@ function BreadcrumbBar() {
           <i aria-hidden="true" /> 記録 {totalLogCount} 件
         </span>
         <span>最終更新 {latestLog.date}</span>
-        <a href={latestLog.href ?? `/logs/${latestLog.slug}`}>▷ 気まぐれに1本</a>
+        <a href={logReadHref(latestLog)}>▷ 気まぐれに1本</a>
       </div>
     </div>
   );
@@ -63,6 +88,29 @@ function Hero() {
           <br />
           ラボの研究記録を、ゆっくりたどる場所。
         </p>
+        <dl className="read-hero__meter" aria-label="研究記録の結果集計">
+          <div>
+            <dt>SUCCESS</dt>
+            <dd>
+              <strong>{readStatusCounts.success}</strong>
+              <span>成功</span>
+            </dd>
+          </div>
+          <div>
+            <dt>FAILED</dt>
+            <dd>
+              <strong>{readStatusCounts.fail}</strong>
+              <span>失敗</span>
+            </dd>
+          </div>
+          <div>
+            <dt>TUNING</dt>
+            <dd>
+              <strong>{readStatusCounts.tuning}</strong>
+              <span>調整中</span>
+            </dd>
+          </div>
+        </dl>
       </div>
       <aside className="librarian-card" aria-label="司書メモ">
         <span className="librarian-card__paw" aria-hidden="true">
@@ -92,7 +140,7 @@ function ReceptionBand() {
         <h2 id="reception-title">このラボについて</h2>
         <p>AIと遊び、つくり、考えた記録が集まる研究所。はじめての方はこちらから。</p>
       </div>
-      <a href="/about">館内案内へ <span aria-hidden="true">→</span></a>
+      <a href={routes.about}>館内案内へ <span aria-hidden="true">→</span></a>
     </section>
   );
 }
@@ -103,6 +151,7 @@ type LogEntryProps = {
 
 function LogEntry({ log }: LogEntryProps) {
   const label = statusLabel(log.status);
+  const relatedExperiment = getRelatedExperiment(log);
 
   return (
     <article className="log-entry">
@@ -114,7 +163,7 @@ function LogEntry({ log }: LogEntryProps) {
           {label ? <span className={`log-entry__status log-entry__status--${log.status}`}>{label}</span> : null}
         </div>
         {log.thumbnail ? (
-          <a className="log-entry__thumb" href={log.href ?? `/logs/${log.slug}`} aria-label={`${log.title} を読む`}>
+          <a className="log-entry__thumb" href={logReadHref(log)} aria-label={`${log.title} を読む`}>
             <img src={log.thumbnail} alt="" loading="lazy" />
           </a>
         ) : null}
@@ -132,9 +181,9 @@ function LogEntry({ log }: LogEntryProps) {
               <span key={tag}>#{tag}</span>
             ))}
           </div>
-          {log.dest ? (
-            <a className="xlink" href={destUrl(log.dest)}>
-              ▷ 実験室で遊ぶ <span>{log.dest}</span>
+          {relatedExperiment ? (
+            <a className="xlink" href={getExperimentLaunchHref(relatedExperiment.id)}>
+              ▷ 実験室で遊ぶ <span>{relatedExperiment.title}</span>
             </a>
           ) : null}
         </footer>
@@ -166,7 +215,9 @@ function ResearchLogSection() {
     () => allResearchLogs.filter((log) => activeFilter === "すべて" || log.category === activeFilter),
     [activeFilter],
   );
-  const displayLogs = experimentFilter ? allResearchLogs.filter((log) => log.dest === experimentFilter) : visibleLogs;
+  const displayLogs = experimentFilter
+    ? allResearchLogs.filter((log) => getRelatedExperimentId(log) === experimentFilter)
+    : visibleLogs;
 
   return (
     <section className="research-section" aria-labelledby="research-title">
@@ -201,7 +252,7 @@ function ResearchLogSection() {
             {!isLoading && displayLogs.map((log) => <LogEntry key={log.id} log={log} />)}
           </div>
         </div>
-        <a className="research-section__all" href="/logs">
+        <a className="research-section__all" href={routes.read}>
           全 {totalLogCount} 件の記録を見る ↓
         </a>
       </div>
@@ -212,7 +263,7 @@ function ResearchLogSection() {
 function LinkStrip() {
   return (
     <section className="read-strip" aria-label="読むための入口">
-      <a className="read-strip__item" href="/podcast">
+      <article className="read-strip__item read-strip__item--pending" aria-disabled="true">
         <span className="read-strip__icon" aria-hidden="true">
           ♪
         </span>
@@ -220,10 +271,10 @@ function LinkStrip() {
           <small>PODCAST ┃ 聴く</small>
           <strong>よこぼラジオ</strong>
           <em>Dr.よこぼとニャビットが、その週にじっていた実験をゆるく振り返る音声記録。</em>
-          <b>エピソード一覧へ →</b>
+          <b>準備中</b>
         </span>
-      </a>
-      <a className="read-strip__item" href="/tags">
+      </article>
+      <article className="read-strip__item read-strip__item--pending" aria-disabled="true" data-planned-route={plannedRoutes.tags}>
         <span className="read-strip__icon" aria-hidden="true">
           #
         </span>
@@ -232,9 +283,9 @@ function LinkStrip() {
           <small>INDEX ┃ さがす</small>
           <strong>タグから探す</strong>
           <em>開発ログ、失敗の記録、考えたこと。気になるテーマから記録をたどれます。</em>
-          <b>タグ索引へ →</b>
+          <b>準備中</b>
         </span>
-      </a>
+      </article>
     </section>
   );
 }

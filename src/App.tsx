@@ -6,6 +6,9 @@ import { LabExperimentPage } from "./components/LabExperimentPage";
 import { ReadArchivePage } from "./components/ReadArchivePage";
 import { ArchiveArticlePage } from "./components/ArchiveArticlePage";
 import { AboutLabPage } from "./components/AboutLabPage";
+import { NotFoundPage } from "./components/NotFoundPage";
+import { RandomTransferDock } from "./components/RandomTransferDock";
+import { routes } from "./data/routes";
 
 export default function App() {
   const readArticleMatch = window.location.pathname.match(/^\/read\/([^/]+)\/?$/);
@@ -14,45 +17,62 @@ export default function App() {
       <>
         <Header variant="dark" showNav />
         <ArchiveArticlePage slug={decodeURIComponent(readArticleMatch[1])} />
+        <RandomTransferDock />
       </>
     );
   }
 
-  if (window.location.pathname === "/read" || window.location.pathname === "/read/") {
+  if (window.location.pathname === routes.read || window.location.pathname === `${routes.read}/`) {
     return (
       <>
         <Header variant="dark" showNav />
         <ReadArchivePage />
+        <RandomTransferDock />
       </>
     );
   }
 
-  if (window.location.pathname.startsWith("/experiments")) {
+  if (window.location.pathname.startsWith(routes.experiments)) {
     return (
       <>
         <Header variant="light" showNav />
         <LabExperimentPage />
+        <RandomTransferDock />
       </>
     );
   }
 
-  if (window.location.pathname === "/about" || window.location.pathname === "/about/") {
+  if (window.location.pathname === routes.about || window.location.pathname === `${routes.about}/`) {
     return (
       <>
         <Header variant="dark" showNav />
         <AboutLabPage />
+        <RandomTransferDock />
+      </>
+    );
+  }
+
+  if (window.location.pathname === routes.home) {
+    return (
+      <>
+        <div className="top-page">
+          <Header variant="light" />
+          <main>
+            <HeroSection />
+            <TeaserSection />
+          </main>
+          <Footer />
+        </div>
+        <RandomTransferDock />
       </>
     );
   }
 
   return (
-    <div className="top-page">
-      <Header variant="light" />
-      <main>
-        <HeroSection />
-        <TeaserSection />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Header variant="light" showNav />
+      <NotFoundPage />
+      <RandomTransferDock />
+    </>
   );
 }
