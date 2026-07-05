@@ -56,6 +56,13 @@ function logReadHref(log: ResearchLog) {
   return routes.read;
 }
 
+function fallbackLogThumbnail(log: ResearchLog) {
+  if (log.status === "success") return "/illustrations/shiryoshitsu/dr-yokobo-smile.png";
+  if (log.status === "fail") return "/illustrations/shiryoshitsu/dr-yokobo-sleepy.png";
+  if (log.status === "tuning") return "/illustrations/shiryoshitsu/nyabit-question.png";
+  return "/illustrations/shiryoshitsu/nyabit-sleepy.png";
+}
+
 function BreadcrumbBar() {
   return (
     <div className="read-meta-bar">
@@ -147,14 +154,17 @@ function ReceptionBand() {
 
 type LogEntryProps = {
   log: ResearchLog;
+  featured?: boolean;
 };
 
-function LogEntry({ log }: LogEntryProps) {
+function LogEntry({ log, featured = false }: LogEntryProps) {
   const label = statusLabel(log.status);
   const relatedExperiment = getRelatedExperiment(log);
+  const thumbnail = log.thumbnail ?? fallbackLogThumbnail(log);
+  const thumbClassName = `log-entry__thumb${log.thumbnail ? "" : " log-entry__thumb--fallback"}`;
 
   return (
-    <article className="log-entry">
+    <article className={`log-entry log-entry--with-thumb${featured ? " log-entry--featured" : ""}`}>
       <span className={`log-entry__dot log-entry__dot--${log.status ?? "none"}`} aria-hidden="true" />
       <div className="log-entry__body">
         <div className="log-entry__meta">
@@ -162,11 +172,13 @@ function LogEntry({ log }: LogEntryProps) {
           <time dateTime={log.date.replaceAll(".", "-")}>{log.date}</time>
           {label ? <span className={`log-entry__status log-entry__status--${log.status}`}>{label}</span> : null}
         </div>
-        {log.thumbnail ? (
-          <a className="log-entry__thumb" href={logReadHref(log)} aria-label={`${log.title} を読む`}>
-            <img src={log.thumbnail} alt="" loading="lazy" />
+        <div className="log-entry__content">
+        {thumbnail ? (
+          <a className={thumbClassName} href={logReadHref(log)} aria-label={`${log.title} を読む`}>
+            <img src={thumbnail} alt="" loading={featured ? "eager" : "lazy"} />
           </a>
         ) : null}
+          <div className="log-entry__text">
         <h3>
           {log.href ? (
             <a href={log.href}>{log.title}</a>
@@ -187,6 +199,8 @@ function LogEntry({ log }: LogEntryProps) {
             </a>
           ) : null}
         </footer>
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -249,7 +263,7 @@ function ResearchLogSection() {
           <div className="timeline">
             {isLoading ? <LogState kind="loading" /> : null}
             {!isLoading && displayLogs.length === 0 ? <LogState kind="empty" /> : null}
-            {!isLoading && displayLogs.map((log) => <LogEntry key={log.id} log={log} />)}
+            {!isLoading && displayLogs.map((log, index) => <LogEntry key={log.id} log={log} featured={index === 0} />)}
           </div>
         </div>
         <a className="research-section__all" href={routes.read}>
