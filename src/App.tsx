@@ -7,7 +7,6 @@ import { ReadArchivePage } from "./components/ReadArchivePage";
 import { ArchiveArticlePage } from "./components/ArchiveArticlePage";
 import { AboutLabPage } from "./components/AboutLabPage";
 import { NotFoundPage } from "./components/NotFoundPage";
-import { RandomTransferDock } from "./components/RandomTransferDock";
 import { routes } from "./data/routes";
 
 export default function App() {
@@ -17,7 +16,6 @@ export default function App() {
       <>
         <Header variant="dark" showNav />
         <ArchiveArticlePage slug={decodeURIComponent(readArticleMatch[1])} />
-        <RandomTransferDock />
       </>
     );
   }
@@ -27,7 +25,6 @@ export default function App() {
       <>
         <Header variant="dark" showNav />
         <ReadArchivePage />
-        <RandomTransferDock />
       </>
     );
   }
@@ -37,7 +34,6 @@ export default function App() {
       <>
         <Header variant="light" showNav />
         <LabExperimentPage />
-        <RandomTransferDock />
       </>
     );
   }
@@ -47,7 +43,6 @@ export default function App() {
       <>
         <Header variant="dark" showNav />
         <AboutLabPage />
-        <RandomTransferDock />
       </>
     );
   }
@@ -63,7 +58,6 @@ export default function App() {
           </main>
           <Footer />
         </div>
-        <RandomTransferDock />
       </>
     );
   }
@@ -72,7 +66,6 @@ export default function App() {
     <>
       <Header variant="light" showNav />
       <NotFoundPage />
-      <RandomTransferDock />
     </>
   );
 }

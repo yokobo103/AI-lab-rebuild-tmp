@@ -28,5 +28,6 @@ export const assets = {
   ctaSprites: {
     playFlaskHover: "/assets/cta-sprites/play-flask-hover-sprite.png",
     readBookHover: "/assets/cta-sprites/read-book-hover-sprite.png",
+    randomDiceHover: "/assets/cta-sprites/random-dice-hover-sprite.png",
   },
 } as const;

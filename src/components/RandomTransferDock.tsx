@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from "react";
+import { type CSSProperties, type MouseEvent, useState } from "react";
 import { archiveArticles } from "../data/archiveArticles";
 import { assets } from "../data/assets";
 import { labExperiments } from "../data/labExperiments";
@@ -19,6 +19,7 @@ const randomTargets = [
 
 export function RandomTransferDock() {
   const [isActivating, setIsActivating] = useState(false);
+  const spriteStyle = { "--sprite-url": `url(${assets.ctaSprites.randomDiceHover})` } as CSSProperties;
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -40,12 +41,12 @@ export function RandomTransferDock() {
         className={`random-transfer-dock${isActivating ? " is-activating" : ""}`}
         type="button"
         onClick={handleClick}
-        aria-label="ランダム転送室を起動"
+        aria-label="ランダム転送室へ移動"
       >
-        <img src={assets.icons.transfer} alt="" aria-hidden="true" />
-        <span>
+        <span className="random-transfer-dock__sprite" style={spriteStyle} aria-hidden="true" />
+        <span className="random-transfer-dock__text">
           <small>転送室</small>
-          <strong>ランダム</strong>
+          <strong>ランダムで移動</strong>
         </span>
       </button>
       <span className={`random-transfer-flash${isActivating ? " is-active" : ""}`} aria-hidden="true" />

@@ -3,12 +3,13 @@ import { type CSSProperties, type MouseEvent, type PointerEvent, useEffect, useR
 type LabButtonProps = {
   href: string;
   label: string;
+  subtitle?: string;
   icon: string;
   sprite?: string;
   variant?: "primary" | "log" | "random";
 };
 
-export function LabButton({ href, label, icon, sprite, variant = "primary" }: LabButtonProps) {
+export function LabButton({ href, label, subtitle, icon, sprite, variant = "primary" }: LabButtonProps) {
   const [isSpritePlaying, setIsSpritePlaying] = useState(false);
   const resetTimerRef = useRef<number | undefined>(undefined);
   const navigateTimerRef = useRef<number | undefined>(undefined);
@@ -82,7 +83,10 @@ export function LabButton({ href, label, icon, sprite, variant = "primary" }: La
       ) : (
         <img className="lab-button__icon" src={icon} alt="" aria-hidden="true" />
       )}
-      <span>{label}</span>
+      <span className="lab-button__text">
+        <span className="lab-button__label">{label}</span>
+        {subtitle ? <span className="lab-button__subtitle">{subtitle}</span> : null}
+      </span>
       <span className="lab-button__arrow" aria-hidden="true">
         →
       </span>

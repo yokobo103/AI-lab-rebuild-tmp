@@ -2,6 +2,7 @@ import { useState } from "react";
 import { assets } from "../data/assets";
 import { routes } from "../data/routes";
 import { LabButton } from "./LabButton";
+import { RandomTransferDock } from "./RandomTransferDock";
 
 type HeroWorld = "lab" | "archive" | null;
 
@@ -51,6 +52,7 @@ export function HeroSection() {
               <LabButton
                 href={routes.experiments}
                 label="遊ぶ（実験室へ）"
+                subtitle="AIを体験して、好奇心をカタチに。"
                 icon={assets.icons.flask}
                 sprite={assets.ctaSprites.playFlaskHover}
               />
@@ -68,11 +70,15 @@ export function HeroSection() {
               <LabButton
                 href={routes.read}
                 label="読む（資料室へ）"
+                subtitle="知識を深めて、学びを広げる。"
                 icon={assets.icons.book}
                 sprite={assets.ctaSprites.readBookHover}
                 variant="log"
               />
             </span>
+          </div>
+          <div className="hero-section__random-transfer motion-fade-up motion-delay-5">
+            <RandomTransferDock />
           </div>
           <a className="hero-section__about-link motion-fade-up motion-delay-5" href={routes.about}>
             ラボについてもっと知る
