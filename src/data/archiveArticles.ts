@@ -2,6 +2,7 @@ import articles from "./archiveArticles.json";
 
 export type ArchiveArticle = {
   id: string;
+  logId: string;
   title: string;
   summary: string;
   author: string;
